@@ -251,7 +251,7 @@ address.  The name column has a predefined width."
   (helm :sources 'helm-source-mu-contacts
         :buffer "*helm mu contacts*"))
 
-(provide 'helm-mu '('helm-mu-contacts))
+(provide 'helm-mu)
 
 ;; Local Variables:
 ;; byte-compile-warnings: (not cl-functions obsolete)
