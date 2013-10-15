@@ -235,6 +235,12 @@ address.  The name column has a predefined width."
          (address (car cand)))
     (mu4e~compose-mail (concat name " <" address ">"))))
 
+(defun helm-mu-persistent-action (candidate)
+  (save-selected-window
+    (helm-mu-display-email candidate))
+  ;; Redisplay.
+  (sit-for 0.1))
+
 
 ;;;###autoload
 (defun helm-mu ()
