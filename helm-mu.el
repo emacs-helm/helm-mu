@@ -81,7 +81,7 @@ the --my-address parameter in mu index."
     (nohighlight)
     (requires-pattern . 3)
     (persistent-action . helm-mu-persistent-action)
-    (action . helm-mu-display-email)))
+    (action . (("Display message in mu4e" helm-mu-display-email)))))
 
 (defvar helm-source-mu-contacts
   '((name . "Search contacts with mu")
@@ -89,7 +89,7 @@ the --my-address parameter in mu index."
     (candidates . helm-mu-contacts-cache)
     (filtered-candidate-transformer . helm-mu-contacts-transformer)
     (nohighlight)
-    (action . helm-mu-compose-mail)))
+    (action . (("Compose email addressed to this contact" helm-mu-compose-mail)))))
 
 
 (defun helm-mu-init ()
