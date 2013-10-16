@@ -127,15 +127,14 @@ the --my-address parameter in mu index."
 
 (defun helm-mu-contacts-init ()
   "Retrieves contacts from mu."
-  (let* ((cmd (concat
-               "mu cfind --format=mutt-ab"
-               (if helm-mu-contacts-personal " --personal" "")
-               (format
-                 " --after=%d"
-                 (truncate (float-time (date-to-time helm-mu-contacts-after))))))
-         (cands (cdr (split-string (shell-command-to-string cmd) "\n"))))
+  (let ((cmd (concat
+              "mu cfind --format=mutt-ab"
+              (if helm-mu-contacts-personal " --personal" "")
+              (format
+                " --after=%d"
+                (truncate (float-time (date-to-time helm-mu-contacts-after)))))))
     (setq helm-mu-contacts-cache
-          (loop for c in cands collect c))))
+          (cdr (split-string (shell-command-to-string cmd) "\n")))))
 
 
 (defun helm-mu-candidate-parser (candidates)
