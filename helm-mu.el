@@ -85,8 +85,7 @@ the --my-address parameter in mu index."
 
 (defvar helm-source-mu-contacts
   '((name . "Search contacts with mu")
-    (init . helm-mu-contacts-init)
-    (candidates . helm-mu-contacts-cache)
+    (candidates . helm-mu-contacts-init)
     (filtered-candidate-transformer . helm-mu-contacts-transformer)
     (nohighlight)
     (action . (("Compose email addressed to this contact" helm-mu-compose-mail)))))
@@ -122,9 +121,6 @@ the --my-address parameter in mu index."
                 (helm-log "Error: Mu %s"
                           (replace-regexp-in-string "\n" "" event))))))))
 
-;; Stores contacts:
-(defvar helm-mu-contacts-cache nil)
-
 (defun helm-mu-contacts-init ()
   "Retrieves contacts from mu."
   (let ((cmd (concat
@@ -133,8 +129,7 @@ the --my-address parameter in mu index."
               (format
                 " --after=%d"
                 (truncate (float-time (date-to-time helm-mu-contacts-after)))))))
-    (setq helm-mu-contacts-cache
-          (cdr (split-string (shell-command-to-string cmd) "\n")))))
+    (cdr (split-string (shell-command-to-string cmd) "\n"))))
 
 
 (defun helm-mu-candidate-parser (candidates)
