@@ -71,6 +71,14 @@ the --my-address parameter in mu index."
   :group 'helm-mu-faces)
 
 
+(defvar helm-mu-map
+  (let ((map (make-sparse-keymap)))
+    (set-keymap-parent map helm-map)
+    (define-key map (kbd "C-c C-c") 'helm-mu-open-headers-view)
+    map)
+  "Keymap used in helm-mu.")
+
+
 (defvar helm-source-mu
   '((name . "Search email with mu")
     (candidates-process . helm-mu-init)
@@ -218,6 +226,11 @@ address.  The name column has a predefined width."
               i)))
 
 
+(defun helm-mu-open-headers-view ()
+  "Open current helm search in mu4e-headers-view."
+  (interactive)
+  (helm-run-after-quit 'mu4e-headers-search helm-pattern))
+
 (defun helm-mu-display-email (candidate)
   "Open an email using mu4e."
   (mu4e-view-message-with-msgid (plist-get candidate :message-id)))
@@ -242,6 +255,7 @@ address.  The name column has a predefined width."
   (helm :sources 'helm-source-mu
         :buffer "*helm mu*"
         :full-frame t
+        :keymap helm-mu-map
         :input (concat helm-mu-default-search-string " ")
         :candidate-number-limit 500))
 
