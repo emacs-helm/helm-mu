@@ -75,6 +75,7 @@ the --my-address parameter in mu index."
   (let ((map (make-sparse-keymap)))
     (set-keymap-parent map helm-map)
     (define-key map (kbd "C-c C-c") 'helm-mu-open-headers-view)
+    (define-key map (kbd "S-<return>") 'helm-mu-open-headers-view)
     map)
   "Keymap used in helm-mu.")
 
