@@ -24,11 +24,11 @@ GNU sed is used to do some filtering of the results returned by mu.  GNU sed is 
 
 Some things that can be configured:
 
-- helm-mu-default-search-string
-- helm-mu-contacts-name-colwidth
-- helm-mu-contacts-name-replace
-- helm-mu-contacts-after
-- helm-mu-contacts-personal
+- `helm-mu-default-search-string`
+- `helm-mu-contacts-name-colwidth`
+- `helm-mu-contacts-name-replace`
+- `helm-mu-contacts-after`
+- `helm-mu-contacts-personal`
 
 Consult the documentation in Emacs or the source code for explanations of these variables.
 
