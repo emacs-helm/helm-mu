@@ -253,6 +253,9 @@ address.  The name column has a predefined width."
 
 ;;;###autoload
 (defun helm-mu ()
+  "Search for emails.  If started in mu4e-headers-view, the
+current query will be used to initialize the search.  Otherwise
+`helm-mu-default-search-string' will be used."
   (interactive)
   (let ((input (if (eq major-mode 'mu4e-headers-mode)
                    (mu4e-last-query)
@@ -266,6 +269,7 @@ address.  The name column has a predefined width."
 
 ;;;###autoload
 (defun helm-mu-contacts ()
+  "Search for contacts."
   (interactive)
   (helm :sources 'helm-source-mu-contacts
         :buffer "*helm mu contacts*"))
