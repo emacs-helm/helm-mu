@@ -254,12 +254,15 @@ address.  The name column has a predefined width."
 ;;;###autoload
 (defun helm-mu ()
   (interactive)
-  (helm :sources 'helm-source-mu
-        :buffer "*helm mu*"
-        :full-frame t
-        :keymap helm-mu-map
-        :input (concat helm-mu-default-search-string " ")
-        :candidate-number-limit 500))
+  (let ((input (if (eq major-mode 'mu4e-headers-mode)
+                   (mu4e-last-query)
+                 (concat helm-mu-default-search-string " "))))
+    (helm :sources 'helm-source-mu
+          :buffer "*helm mu*"
+          :full-frame t
+          :keymap helm-mu-map
+          :input input
+          :candidate-number-limit 500)))
 
 ;;;###autoload
 (defun helm-mu-contacts ()
