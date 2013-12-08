@@ -18,7 +18,7 @@
 
 ;;; Code:
 
-(eval-when-compile (require 'cl))
+(require 'cl-lib)
 (require 'helm)
 (require 'mu4e)
 
@@ -144,7 +144,7 @@ the --my-address parameter in mu index."
 
 (defun helm-mu-candidate-parser (candidates)
   "Parses the sexps obtained from mu find."
-  (loop for i in candidates
+  (cl-loop for i in candidates
         if (string= i "mu: no matches for search expression")
           collect i
         else
@@ -198,7 +198,7 @@ the --my-address parameter in mu index."
   "Formats the candidates to look like the entries in mu4e headers view."
   (if (equal candidates '("mu: no matches for search expression"))
       (list (propertize (car candidates) 'face 'mu4e-system-face))
-    (loop for i in candidates
+    (cl-loop for i in candidates
           for width = (save-excursion (with-helm-window (window-width)))
           for line = (helm-mu-candidate-formatter i)
           collect (cons (truncate-string-to-width line width) i))))
@@ -206,7 +206,7 @@ the --my-address parameter in mu index."
 (defun helm-mu-contacts-transformer (candidates source)
   "Formats the contacts to display in two columns, name and
 address.  The name column has a predefined width."
-  (loop for i in candidates
+  (cl-loop for i in candidates
         for contact = (split-string i "\t")
         for name = (replace-regexp-in-string
                      (car helm-mu-contacts-name-replace)
