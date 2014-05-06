@@ -131,6 +131,9 @@ the --my-address parameter in mu index."
   :group 'helm-mu
   :type  'integer)
 
+(easy-menu-add-item nil '("Tools" "Helm" "Tools") ["Mu" helm-mu t])
+(easy-menu-add-item nil '("Tools" "Helm" "Tools") ["Mu contacts" helm-mu-contacts t])
+
 
 (defface helm-mu-contacts-name-face
   '((t :foreground "black"))
