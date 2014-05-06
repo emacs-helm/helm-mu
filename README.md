@@ -18,7 +18,7 @@ Alternatively, you can use the autoload facility:
     (autoload 'helm-mu "helm-mu" "" t)
     (autoload 'helm-mu-contacts "helm-mu" "" t)
 
-To run mu, helm-mu uses the elisp function `start-process-shell-command`.  It assumes that the shell called by that function is compatible with the Bourne shell (e.g. bash).  If your shell is incompatible, the mu command may not work.
+To run mu, helm-mu uses the function `start-process-shell-command`.  It assumes that the shell called by that function is compatible with the Bourne shell (e.g., bash).  If your shell is incompatible, the mu command may not work.
 
 GNU sed is used to do some filtering of the results returned by mu.  GNU sed is standard on Linux but OSX users may have to install it since the pre-installed BSD sed has different command line options.
 
