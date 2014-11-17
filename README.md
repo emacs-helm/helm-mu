@@ -20,7 +20,7 @@ Alternatively, you can use the autoload facility:
 
 To run mu, helm-mu uses the function `start-process-shell-command`.  It assumes that the shell called by that function is compatible with the Bourne shell (e.g., bash).  If your shell is incompatible, the mu command may not work.
 
-GNU sed is used to do some filtering of the results returned by mu.  GNU sed is standard on Linux. OSX users will need to install GNU sed - OSXs default BSD sed will throw errors.
+GNU sed is used to do some filtering of the results returned by mu.  GNU sed is standard on Linux, but OSX users will need to install GNU sed - OSXs default BSD sed will throw errors.
 
 To install GNU sed on OSX using homebrew:
 
