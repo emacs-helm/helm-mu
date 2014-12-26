@@ -268,12 +268,25 @@ the --my-address parameter in mu index."
           ((memq 'passed flags)  'mu4e-forwarded-face)
           (t                     'mu4e-header-face))))))
 
+;; The function `window-width' does not necessarily report the correct
+;; number of characters that fit on a line.  This is a
+;; work-around.  See also this bug report:
+;; http://debbugs.gnu.org/cgi/bugreport.cgi?bug=19395
+(defun helm-mu-window-width ()
+  (if (and (not (featurep 'xemacs))
+           (display-graphic-p)
+           overflow-newline-into-fringe
+           (/= (frame-parameter nil 'left-fringe) 0)
+           (/= (frame-parameter nil 'right-fringe) 0))
+      (window-body-width)
+    (1- (window-body-width))))
+
 (defun helm-mu-candidates-formatter (candidates)
   "Formats the candidates to look like the entries in mu4e headers view."
   (if (equal candidates '("mu: no matches for search expression"))
       (list (propertize (car candidates) 'face 'mu4e-system-face))
     (cl-loop for i in candidates
-          for width = (save-excursion (with-helm-window (window-width)))
+          for width = (save-excursion (with-helm-window (helm-mu-window-width)))
           for line = (helm-mu-candidate-formatter i)
           collect (cons (truncate-string-to-width line width) i))))
 
@@ -287,7 +300,7 @@ address.  The name column has a predefined width."
                      (cadr helm-mu-contacts-name-replace)
                      (cadr contact))
         for address = (car contact)
-        for width = (save-excursion (with-helm-window (window-width)))
+        for width = (save-excursion (with-helm-window (helm-mu-window-width)))
         collect
         (cons (concat
                 (propertize
