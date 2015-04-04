@@ -156,23 +156,23 @@ the --my-address parameter in mu index."
 
 
 (defvar helm-source-mu
-  '((name . "Search email with mu")
-    (candidates-process . helm-mu-init)
-    (candidate-transformer . (helm-mu-candidate-parser
-                              helm-mu-candidates-formatter))
-    (delayed)
-    (no-matchplugin)
-    (nohighlight)
-    (requires-pattern . 3)
-    (persistent-action . helm-mu-persistent-action)
-    (action . (("Display message in mu4e" . helm-mu-display-email)))))
+  (helm-build-async-source "Search email with mu"
+    :candidates-process #'helm-mu-init
+    :candidate-transformer
+    '(helm-mu-candidate-parser helm-mu-candidates-formatter)
+    :delayed t
+    :matchplugin nil
+    :nohighlight t
+    :requires-pattern 3
+    :persistent-action #'helm-mu-persistent-action
+    :action '(("Display message in mu4e" . helm-mu-display-email))))
 
 (defvar helm-source-mu-contacts
-  '((name . "Search contacts with mu")
-    (candidates . helm-mu-contacts-init)
-    (filtered-candidate-transformer . helm-mu-contacts-transformer)
-    (nohighlight)
-    (action . (("Compose email addressed to this contact" . helm-mu-compose-mail)))))
+  (helm-build-in-buffer-source "Search contacts with mu"
+    :data #'helm-mu-contacts-init
+    :filtered-candidate-transformer #'helm-mu-contacts-transformer
+    :fuzzy-match t
+    :action '(("Compose email addressed to this contact" . helm-mu-compose-mail))))
 
 
 (defun helm-mu-init ()
@@ -293,7 +293,9 @@ the --my-address parameter in mu index."
 (defun helm-mu-contacts-transformer (candidates source)
   "Formats the contacts to display in two columns, name and
 address.  The name column has a predefined width."
-  (cl-loop for i in candidates
+  (cl-loop for i in (helm-remove-if-match
+                     "\\`\\(reply.*reply\\.github\\.com\\)\\|\\(noreply\\)"
+                     candidates)
         for contact = (split-string i "\t")
         for name = (replace-regexp-in-string
                      (car helm-mu-contacts-name-replace)
