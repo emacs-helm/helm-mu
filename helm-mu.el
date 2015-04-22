@@ -171,7 +171,7 @@ the --my-address parameter in mu index."
   (helm-build-in-buffer-source "Search contacts with mu"
     :data #'helm-mu-contacts-init
     :filtered-candidate-transformer #'helm-mu-contacts-transformer
-    :fuzzy-match t
+    :fuzzy-match nil
     :action '(("Compose email addressed to this contact" . helm-mu-compose-mail))))
 
 
