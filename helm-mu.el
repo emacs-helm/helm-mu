@@ -131,6 +131,13 @@ the --my-address parameter in mu index."
   :group 'helm-mu
   :type  'integer)
 
+(defcustom helm-mu-gnu-sed-program "sed"
+  "Program name of GNU sed.  For Mac OS X user, you might need to
+set it to \"gsed\" if your GNU sed is installed via MacPorts or
+Homebrew without some specific installation options."
+  :group 'helm-mu
+  :type 'string)
+
 (easy-menu-add-item nil '("Tools" "Helm" "Tools") ["Mu" helm-mu t])
 (easy-menu-add-item nil '("Tools" "Helm" "Tools") ["Mu contacts" helm-mu-contacts t])
 
@@ -180,7 +187,7 @@ the --my-address parameter in mu index."
   (let ((process-connection-type nil)
         (maxnum (helm-candidate-number-limit helm-source-mu))
         (mucmd "mu find -f $'i\td\tf\tt\ts' --sortfield=d --maxnum=%d --reverse --format=sexp ")
-        (sedcmd "sed -e ':a;N;$!ba;s/\\n\\(\\t\\|\\()\\)\\)/ \\2/g'"))
+        (sedcmd (concat helm-mu-gnu-sed-program " -e ':a;N;$!ba;s/\\n\\(\\t\\|\\()\\)\\)/ \\2/g'")))
     (prog1
       (start-process-shell-command "helm-mu" helm-buffer
         (concat (format mucmd maxnum)
