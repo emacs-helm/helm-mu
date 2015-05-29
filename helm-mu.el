@@ -331,6 +331,9 @@ address.  The name column has a predefined width."
 
 (defun helm-mu-display-email (candidate)
   "Open an email using mu4e."
+  (let ((view-buffer (get-buffer "*mu4e-view*")))
+    (when view-buffer
+      (kill-buffer view-buffer)))
   (mu4e-view-message-with-msgid (plist-get candidate :message-id)))
 
 (defun helm-mu-compose-mail (candidate)
