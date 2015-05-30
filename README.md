@@ -1,3 +1,5 @@
+[![MELPA](http://melpa.org/packages/helm-mu-badge.svg)](http://melpa.org/#/helm-mu)
+    
 helm-mu
 =======
 
