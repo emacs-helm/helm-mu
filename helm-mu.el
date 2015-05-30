@@ -30,6 +30,10 @@
 ;; search operators similar to Google mail, e.g:
 ;;
 ;;     from:Peter to:Anne flag:attach search term
+;;
+;; See the Github page for details and install instructions:
+;;
+;;  https://github.com/emacs-helm/helm-mu
 
 ;;; Install:
 
