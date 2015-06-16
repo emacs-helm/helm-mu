@@ -150,8 +150,13 @@ Homebrew without some specific installation options."
   :group 'helm-mu
   :type 'string)
 
-(easy-menu-add-item nil '("Tools" "Helm" "Tools") ["Mu" helm-mu t])
-(easy-menu-add-item nil '("Tools" "Helm" "Tools") ["Mu contacts" helm-mu-contacts t])
+(if (not (featurep 'hel-config))
+    (warn "Helm does not seem to be properly configured.  Please see
+    Helm's documentation for details on how to do this:
+    https://github.com/emacs-helm/helm#install-from-emacs-packaging-system")
+  (easy-menu-add-item nil '("Tools" "Helm" "Tools") ["Mu" helm-mu
+    t])
+  (easy-menu-add-item nil '("Tools" "Helm" "Tools") ["Mu contacts" helm-mu-contacts t]))
 
 
 (defface helm-mu-contacts-name-face
