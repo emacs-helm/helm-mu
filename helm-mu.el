@@ -150,7 +150,7 @@ Homebrew without some specific installation options."
   :group 'helm-mu
   :type 'string)
 
-(if (not (featurep 'hel-config))
+(if (not (featurep 'helm-config))
     (warn "Helm does not seem to be properly configured.  Please see
     Helm's documentation for details on how to do this:
     https://github.com/emacs-helm/helm#install-from-emacs-packaging-system")
