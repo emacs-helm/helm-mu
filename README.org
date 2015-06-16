@@ -1,0 +1,57 @@
+#+TITLE: Helm-mu – A Helm front-end for the maildir indexer mu and the mail user agent mu4e
+#+Options: num:nil
+
+[[http://melpa.org/#/helm-mu][http://melpa.org/packages/helm-mu-badge.svg]]
+    
+[[https://github.com/djcb/mu][Mu]] is an indexer for maildirs and mu4e is a mutt-like MUA for Emacs build on top of mu.  Mu is highly efficient, which makes it possible to get instant search results even for huge maildirs.  It also provides search operators similar to Google mail, e.g:
+
+#+BEGIN_EXAMPLE
+    from:Titus to:Anne flag:attach vacation photos
+#+END_EXAMPLE
+
+* Install
+
+Helm-mu requires a fully configured mu4e setup.  Also make sure that Helm is properly installed and configured. This involves putting the following line in your startup file (see [[https://github.com/emacs-helm/helm#install-from-emacs-packaging-system][Helm’s documentation]] for details):
+
+#+BEGIN_SRC emacs-lisp
+    (require 'helm-config)
+#+END_SRC
+
+The preferred way to install helm-mu is through MELPA but you can also place the file ~helm-mu.el~ in a directory included in your ~load-path~.  In the latter case, add the following to your init file:
+
+#+BEGIN_SRC emacs-lisp
+    (require 'helm-mu)
+#+END_SRC
+
+Alternatively, you can use the autoload facility:
+
+#+BEGIN_SRC emacs-lisp
+    (autoload 'helm-mu "helm-mu" "" t)
+    (autoload 'helm-mu-contacts "helm-mu" "" t)
+#+END_SRC
+
+To run mu, helm-mu uses the function ~start-process-shell-command~.  It assumes that the shell called by that function is compatible with the Bourne shell (e.g., bash).
+
+GNU sed is used to do some filtering of the results returned by mu.  GNU sed is standard on Linux, but OSX users will need to install GNU sed – OSXs default BSD sed will throw errors.
+
+To install GNU sed on OSX using Homebrew:
+
+#+BEGIN_SRC sh
+brew install gnu-sed --with-default-names
+#+END_SRC
+
+*Note:* With standard Homebrew configurations, installing GNU sed in this way will block the default BSD sed.
+
+Customization variables are listed below.  See the documentation within Emacs for details.
+
+- ~helm-mu-default-search-string~
+- ~helm-mu-contacts-name-colwidth~
+- ~helm-mu-contacts-name-replace~
+- ~helm-mu-contacts-after~
+- ~helm-mu-contacts-personal~
+
+* Usage
+
+To search for emails use ~helm-mu~.  When you would like to read an email without finishing the helm session, you can select the email and press ~Ctrl-z~.  This will split the screen horizontally and show the email in the new window while keeping the search results in the other.  Alternatively, you can open the email using the enter key and return to the helm session using the command ~helm-resume~.
+
+To search for contacts use ~helm-mu-contacts~.  Note that search terms are interpreted differently by ~helm-mu-contacts~ than by ~helm-mu~ which assumes that the search terms are complete words, i.e., that they are surrounded by white spaces or punctuation.  So if you search for ~jo~ it will only return emails in which ~jo~ occurs as a word.  In contrast to that, ~helm-mu-contacts~ will return all contacts in which ~jo~ occurs as a substring.  ~helm-mu-contacts~ uses the grep tool for searching.  That means that any regular expression supported by grep can be used when searching for contacts.
