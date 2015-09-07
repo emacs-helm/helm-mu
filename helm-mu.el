@@ -160,12 +160,14 @@ Homebrew without some specific installation options."
 
 
 (defface helm-mu-contacts-name-face
-  '((t :foreground "black"))
+  '((((background dark)) :foreground "white")
+    (t :foreground "black"))
   "Face for names in contacts list."
   :group 'helm-mu-faces)
 
 (defface helm-mu-contacts-address-face
-  '((t :foreground "dim gray"))
+  '((((background dark)) :foreground "gray")
+    (t :foreground "dim gray"))
   "Face for email addresses in contacts list."
   :group 'helm-mu-faces)
 
