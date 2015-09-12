@@ -342,6 +342,13 @@ address.  The name column has a predefined width."
                   'face 'helm-mu-contacts-address-face))
               i)))
 
+(defun helm-mu-format-contact (candidate)
+  "Convert a CANDIDATE into a format suitable for mailing."
+  (let* ((cand (split-string candidate "\t"))
+         (name (cadr cand))
+         (address (car cand)))
+    (concat name " <" address ">")))
+
 
 (defun helm-mu-open-headers-view ()
   "Open current helm search in mu4e-headers-view."
@@ -357,10 +364,8 @@ address.  The name column has a predefined width."
 
 (defun helm-mu-compose-mail (candidate)
   "Compose a new email directed to the selected contacts."
-  (let* ((cand (split-string candidate "\t"))
-         (name (cadr cand))
-         (address (car cand)))
-    (mu4e~compose-mail (concat name " <" address ">"))))
+  (mu4e~compose-mail (mapconcat 'helm-mu-format-contact
+                                (helm-marked-candidates) ", ")))
 
 (defun helm-mu-persistent-action (candidate)
   (save-selected-window
