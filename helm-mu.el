@@ -266,6 +266,7 @@ Homebrew without some specific installation options."
               (concat
                 (mu4e~headers-thread-prefix (mu4e-message-field candidate :thread))
                 val))
+            (:thread-subject (mu4e~headers-thread-subject candidate))
             ((:maildir :path) val)
             ((:to :from :cc :bcc) (mu4e~headers-contact-str val))
             (:from-or-to (mu4e~headers-from-or-to candidate))
