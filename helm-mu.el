@@ -198,7 +198,8 @@ Homebrew without some specific installation options."
     :data #'helm-mu-contacts-init
     :filtered-candidate-transformer #'helm-mu-contacts-transformer
     :fuzzy-match nil
-    :action '(("Compose email addressed to this contact" . helm-mu-compose-mail))))
+    :action '(("Compose email addressed to this contact" . helm-mu-compose-mail)
+              ("Get the emails from/to given contacts" . helm-mu-action-get-contact-emails))))
 
 
 (defun helm-mu-init ()
@@ -369,6 +370,26 @@ address.  The name column has a predefined width."
   (mu4e~compose-mail (mapconcat 'helm-mu-format-contact
                                 (helm-marked-candidates) ", ")))
 
+(defun helm-mu-action-get-contact-emails (_candidate)
+  "Get the emails from/to (marked) contact"
+  ;; Extract email from marked candidates
+  (let* ((emails (mapcar #'first
+                         (mapcar #'split-string
+                                 (helm-marked-candidates))))
+         ;; Compose the search query for helm-mu and let bind it to
+         ;; `helm-mu-default-search-string'. The query is grouped so that any
+         ;; further filter supplied by user are applied for messages matching
+         ;; all contacts not just the last contact
+         (helm-mu-default-search-string (concat "("
+                                                ;; Not using `string-join' here
+                                                ;; since it is not available on
+                                                ;; pre 24.4 emacs
+                                                (mapconcat 'identity
+                                                           (mapcar (lambda (email) (format "contact:%s" email)) emails)
+                                                           " OR ")
+                                                ")")))
+    (helm-mu)))
+
 (defun helm-mu-persistent-action (candidate)
   (save-selected-window
     (helm-mu-display-email candidate))
@@ -385,6 +406,13 @@ current query will be used to initialize the search.  Otherwise
   (let ((input (if (eq major-mode 'mu4e-headers-mode)
                    (mu4e-last-query)
                  (concat helm-mu-default-search-string " "))))
+
+    ;; If there is an existing helm action buffer kill it, otherwise it interferes
+    ;; with the action for this source. This will happen if helm-mu is called as
+    ;; an action from some other source
+    (when (get-buffer helm-action-buffer)
+      (kill-buffer helm-action-buffer))
+
     (helm :sources 'helm-source-mu
           :buffer "*helm mu*"
           :full-frame t
