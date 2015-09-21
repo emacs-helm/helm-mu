@@ -206,7 +206,7 @@ Homebrew without some specific installation options."
   "Initialize async mu process for `helm-source-mu'."
   (let ((process-connection-type nil)
         (maxnum (helm-candidate-number-limit helm-source-mu))
-        (mucmd (concat mu4e-mu-binary " find -f $'i\td\tf\tt\ts' --sortfield=d --maxnum=%d --reverse --format=sexp %s "))
+        (mucmd (concat mu4e-mu-binary " find -f $'i\td\tf\tt\ts' --sortfield=d --maxnum=%d --reverse --format=sexp %s 2>/dev/null "))
         (sedcmd (concat helm-mu-gnu-sed-program " -e ':a;N;$!ba;s/\\n\\(\\t\\|\\()\\)\\)/ \\2/g'")))
     (prog1
       (start-process-shell-command "helm-mu" helm-buffer
