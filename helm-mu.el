@@ -403,9 +403,15 @@ address.  The name column has a predefined width."
 current query will be used to initialize the search.  Otherwise
 `helm-mu-default-search-string' will be used."
   (interactive)
-  (let ((input (if (eq major-mode 'mu4e-headers-mode)
-                   (mu4e-last-query)
-                 (concat helm-mu-default-search-string " "))))
+  (let* ((query (if (eq major-mode 'mu4e-headers-mode)
+                    (mu4e-last-query)
+                  helm-mu-default-search-string))
+         ;; Do not append space it there is already trailing space or query is
+         ;; empty
+         (input (if (not (or (string-match-p " $" query)
+                             (string= "" query)))
+                    (concat query " ")
+                  query)))
 
     ;; If there is an existing helm action buffer kill it, otherwise it interferes
     ;; with the action for this source. This will happen if helm-mu is called as
