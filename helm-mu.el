@@ -63,10 +63,13 @@
 ;; Some things that can be configured:
 ;;
 ;; - `helm-mu-default-search-string'
+;; - `helm-mu-skip-duplicates'
 ;; - `helm-mu-contacts-name-colwidth'
 ;; - `helm-mu-contacts-name-replace'
 ;; - `helm-mu-contacts-after'
 ;; - `helm-mu-contacts-personal'
+;; - `helm-mu-gnu-sed-program'
+;; - `helm-mu-append-implicit-wildcard'
 ;;
 ;; Consult the documentation in Emacs or the source code below for
 ;; explanations of these variables.
@@ -150,6 +153,14 @@ Homebrew without some specific installation options."
   :group 'helm-mu
   :type 'string)
 
+(defcustom helm-mu-append-implicit-wildcard t
+  "Should a wildcard be appended implicitly to the search string.
+If non-nil a wildcard is appended to the user's search query before passing it
+to mu, this allows getting results even for partially entered queries.
+See `helm-mu-get-search-pattern'"
+  :group 'helm-mu
+  :type 'boolean)
+
 (if (not (featurep 'helm-config))
     (warn "Helm does not seem to be properly configured.  Please see
     Helm's documentation for details on how to do this:
@@ -202,17 +213,30 @@ Homebrew without some specific installation options."
               ("Get the emails from/to given contacts" . helm-mu-action-get-contact-emails))))
 
 
+
+(defun helm-mu-get-search-pattern ()
+  "Get the pattern that should be sent to mu.
+If `helm-mu-append-implicit-wildcard' is non-nil, this creates a search pattern
+by appending a `*' to the pattern input by the user"
+  (if (and helm-mu-append-implicit-wildcard
+           ;; Do not append a wildcard if flag is being searched for, wildcards do
+           ;; not work with flag
+           (not  (string-match-p "flag:[[:alnum:]]+$" helm-pattern)))
+      (concat helm-pattern "*")
+    helm-pattern))
+
 (defun helm-mu-init ()
   "Initialize async mu process for `helm-source-mu'."
   (let ((process-connection-type nil)
         (maxnum (helm-candidate-number-limit helm-source-mu))
         (mucmd (concat mu4e-mu-binary " find -f $'i\td\tf\tt\ts' --sortfield=d --maxnum=%d --reverse --format=sexp %s 2>/dev/null "))
-        (sedcmd (concat helm-mu-gnu-sed-program " -e ':a;N;$!ba;s/\\n\\(\\t\\|\\()\\)\\)/ \\2/g'")))
+        (sedcmd (concat helm-mu-gnu-sed-program " -e ':a;N;$!ba;s/\\n\\(\\t\\|\\()\\)\\)/ \\2/g'"))
+        (pattern (helm-mu-get-search-pattern)))
     (prog1
       (start-process-shell-command "helm-mu" helm-buffer
         (concat (format mucmd maxnum (if helm-mu-skip-duplicates "--skip-dups" ""))
                 (mapconcat 'shell-quote-argument
-                           (split-string helm-pattern " ")
+                           (split-string pattern " ")
                            " ")
                  " | " sedcmd))
       (set-process-sentinel
@@ -356,7 +380,7 @@ address.  The name column has a predefined width."
 (defun helm-mu-open-headers-view ()
   "Open current helm search in mu4e-headers-view."
   (interactive)
-  (helm-run-after-quit 'mu4e-headers-search helm-pattern))
+  (helm-run-after-quit 'mu4e-headers-search (helm-mu-get-search-pattern)))
 
 (defun helm-mu-display-email (candidate)
   "Open an email using mu4e."
