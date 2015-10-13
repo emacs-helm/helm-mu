@@ -42,9 +42,9 @@
 ;;
 ;; Copy helm-mu.el to a directory in your load-path.  And add the
 ;; following to your init file:
-;;  
+;;
 ;;     (require 'helm-mu)
-;;  
+;;
 ;; Alternatively, you can use the autoload facility:
 ;;
 ;;     (autoload 'helm-mu "helm-mu" "" t)
@@ -134,9 +134,10 @@ default value removes quotation marks."
   :type  '(list string string))
 
 (defcustom helm-mu-contacts-after "01-Jan-1970 00:00:00"
-  "Only show contacts from mails received after that time."
+  "Only show contacts from mails received after that time.
+Should be of the form the function `date-to-time' can parse."
   :group 'helm-mu
-  :type  'integer)
+  :type  'string)
 
 (defcustom helm-mu-contacts-personal nil
   "If non-nil, only show addresses seen in messages where one of
@@ -144,7 +145,7 @@ default value removes quotation marks."
 is to exclude addresses only seen in mailing-list messages. See
 the --my-address parameter in mu index."
   :group 'helm-mu
-  :type  'integer)
+  :type  'boolean)
 
 (defcustom helm-mu-gnu-sed-program "sed"
   "Program name of GNU sed.  For Mac OS X user, you might need to
