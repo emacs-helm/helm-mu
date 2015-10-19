@@ -393,7 +393,8 @@ address.  The name column has a predefined width."
 (defun helm-mu-compose-mail (candidate)
   "Compose a new email directed to the selected contacts."
   (mu4e~compose-mail (mapconcat 'helm-mu-format-contact
-                                (helm-marked-candidates) ", ")))
+                                (helm-marked-candidates) ", "))
+  (mu4e-compose-mode))
 
 (defun helm-mu-action-get-contact-emails (_candidate)
   "Get the emails from/to (marked) contact"
