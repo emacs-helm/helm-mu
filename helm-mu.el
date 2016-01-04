@@ -38,7 +38,10 @@
 ;;; Install:
 
 ;; Helm-mu requires a fully configured mu4e setup and the latest
-;; version of mu (version from Sept 27 2013 or later).
+;; version of mu (version from Sept 27 2013 or later).  Also make sure
+;; that helm is configured.  See
+;; https://github.com/emacs-helm/helm#install-from-emacs-packaging-system
+;; for details.
 ;;
 ;; Copy helm-mu.el to a directory in your load-path.  And add the
 ;; following to your init file:
@@ -52,7 +55,7 @@
 ;;
 ;; To run mu, helm-mu uses the function `start-process-shell-command'.
 ;; It assumes that the shell called by that function is compatible
-;; with the Bourne shell (e.g. bash).  If your shell is incompatible,
+;; with the Bourne shell (e.g., bash).  If your shell is incompatible,
 ;; the mu command may not work.
 ;;
 ;; GNU sed is used to do some filtering of the results returned by
@@ -99,6 +102,7 @@
 (require 'cl-lib)
 (require 'helm)
 (require 'mu4e)
+(require 'helm-easymenu)
 
 (defgroup helm-mu nil
   "Helm completion for mu."
@@ -162,13 +166,8 @@ See `helm-mu-get-search-pattern'"
   :group 'helm-mu
   :type 'boolean)
 
-(if (not (featurep 'helm-config))
-    (warn "Helm does not seem to be properly configured.  Please see
-    Helm's documentation for details on how to do this:
-    https://github.com/emacs-helm/helm#install-from-emacs-packaging-system")
-  (easy-menu-add-item nil '("Tools" "Helm" "Tools") ["Mu" helm-mu
-    t])
-  (easy-menu-add-item nil '("Tools" "Helm" "Tools") ["Mu contacts" helm-mu-contacts t]))
+(easy-menu-add-item nil '("Tools" "Helm" "Tools") ["Mu" helm-mu t])
+(easy-menu-add-item nil '("Tools" "Helm" "Tools") ["Mu contacts" helm-mu-contacts t])
 
 
 (defface helm-mu-contacts-name-face
