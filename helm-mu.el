@@ -43,9 +43,9 @@
 ;; https://github.com/emacs-helm/helm#install-from-emacs-packaging-system
 ;; for details.
 ;;
-;; Copy helm-mu.el to a directory in your load-path.  And add the
-;; following to your init file:
-;;
+;; Copy helm-mu.el to a directory in your load-path or install helm-mu
+;; from MELPA (preferred).  Then add the following to your init file:
+;;  
 ;;     (require 'helm-mu)
 ;;
 ;; Alternatively, you can use the autoload facility:
