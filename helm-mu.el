@@ -374,7 +374,7 @@ address.  The name column has a predefined width."
   (let* ((cand (split-string candidate "\t"))
          (name (cadr cand))
          (address (car cand)))
-    (concat name " <" address ">")))
+    (concat "\"" name "\"" " <" address ">")))
 
 
 (defun helm-mu-open-headers-view ()
