@@ -210,7 +210,8 @@ See `helm-mu-get-search-pattern'"
     :filtered-candidate-transformer #'helm-mu-contacts-transformer
     :fuzzy-match nil
     :action '(("Compose email addressed to this contact" . helm-mu-compose-mail)
-              ("Get the emails from/to given contacts" . helm-mu-action-get-contact-emails))))
+              ("Get the emails from/to given contacts" . helm-mu-action-get-contact-emails)
+              ("Copy address to clipboard" . helm-mu-action-kill-address))))
 
 
 
@@ -414,6 +415,13 @@ address.  The name column has a predefined width."
                                                            " OR ")
                                                 ")")))
     (helm-mu)))
+
+(defun helm-mu-action-kill-address (candidate)
+  "Make the addresses in CANDIDATE the latest entry in the kill ring."
+  (let ((addresses (mapconcat 'helm-mu-format-contact
+                              (helm-marked-candidates) ", ")))
+    (kill-new addresses)
+    (message (concat  "Copied: " addresses))))
 
 (defun helm-mu-persistent-action (candidate)
   (save-selected-window
