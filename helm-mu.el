@@ -197,7 +197,6 @@ See `helm-mu-get-search-pattern'"
     :candidates-process #'helm-mu-init
     :candidate-transformer
     '(helm-mu-candidate-parser helm-mu-candidates-formatter)
-    :delayed t
     :matchplugin nil
     :nohighlight t
     :requires-pattern 3
