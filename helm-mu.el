@@ -406,14 +406,15 @@ address.  The name column has a predefined width."
          ;; `helm-mu-default-search-string'. The query is grouped so that any
          ;; further filter supplied by user are applied for messages matching
          ;; all contacts not just the last contact
-         (helm-mu-default-search-string (concat "("
-                                                ;; Not using `string-join' here
-                                                ;; since it is not available on
-                                                ;; pre 24.4 emacs
-                                                (mapconcat 'identity
-                                                           (mapcar (lambda (email) (format "contact:%s" email)) emails)
-                                                           " OR ")
-                                                ")")))
+         (helm-mu-default-search-string
+          (concat "("
+                  ;; Not using `string-join' here
+                  ;; since it is not available on
+                  ;; pre 24.4 emacs
+                  (mapconcat 'identity
+                             (mapcar (lambda (email) (format "contact:%s" email)) emails)
+                             " OR ")
+                  ")")))
     (helm-mu)))
 
 (defun helm-mu-chomp (str)
