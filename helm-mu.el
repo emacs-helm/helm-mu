@@ -209,7 +209,9 @@ See `helm-mu-get-search-pattern'"
     :filtered-candidate-transformer #'helm-mu-contacts-transformer
     :fuzzy-match nil
     :action '(("Compose email addressed to this contact" . helm-mu-compose-mail)
-              ("Get the emails from/to given contacts" . helm-mu-action-get-contact-emails))))
+              ("Get the emails from/to given contacts" . helm-mu-action-get-contact-emails)
+              ("Insert email addresses at point." . helm-mu-action-insert-contacts)
+              ("Copy email addresses to clipboard." . helm-mu-action-copy-contacts-to-clipboard))))
 
 
 
@@ -413,6 +415,44 @@ address.  The name column has a predefined width."
                                                            " OR ")
                                                 ")")))
     (helm-mu)))
+
+(defun helm-mu-chomp (str)
+  "Chomp leading and tailing whitespace from STR."
+  (replace-regexp-in-string (rx (or (: bos (* (any " \t\n")))
+                                    (: (* (any " \t\n")) eos)))
+                            ""
+                            str))
+
+(defun helm-mu-compile-address-list (candidates)
+  "Compile a string containing a list of contacts suitable for
+use in the address field of an email."
+  (let* ((candidates (mapcar (lambda (s) (split-string s "[ \t]")) candidates)))
+    (mapconcat #'identity
+               (cl-loop
+                for cand in candidates
+                for address = (helm-mu-chomp (car cand))
+                for name    = (helm-mu-chomp (mapconcat #'identity (cdr cand) " "))
+                for name    = (if (string-match "," name) (format "\"%s\"" name) name)
+                if (string= name "") collect address
+                else collect (format "%s <%s>" name address))
+               ", ")))
+
+(defun helm-mu-action-insert-contacts (_candidate)
+  "Insert list of contacts at point.  The contacts are formatted
+in a format suitable for use in the address field of an email."
+  (let* ((candidates (helm-marked-candidates))
+         (addresses (helm-mu-compile-address-list candidates)))
+    (with-helm-current-buffer
+      (insert addresses))))
+
+(defun helm-mu-action-copy-contacts-to-clipboard (_candidate)
+  "Copy a list of contacts to the clipboard.  The contacts are
+formatted in a format suitable for use in the address field of an
+email."
+  (let* ((candidates (helm-marked-candidates))
+         (addresses (helm-mu-compile-address-list candidates)))
+    (with-helm-current-buffer
+      (kill-new addresses))))
 
 (defun helm-mu-persistent-action (candidate)
   (save-selected-window
