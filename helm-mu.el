@@ -460,8 +460,7 @@ formatted in a format suitable for use in the address field of an
 email."
   (let* ((candidates (helm-marked-candidates))
          (addresses (helm-mu-compile-address-list candidates)))
-    (with-helm-current-buffer
-      (kill-new addresses))))
+    (kill-new addresses)))
 
 (defun helm-mu-persistent-action (candidate)
   (save-selected-window
