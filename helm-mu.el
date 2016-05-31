@@ -34,6 +34,14 @@
 ;; See the Github page for details and install instructions:
 ;;
 ;;  https://github.com/emacs-helm/helm-mu
+;;
+;; News:
+;;
+;; - 2016-05-31: Added two new actions in helm-mu-contacts: 1. Insert
+;;   selected contacts at point. 2) Copy selected contacts to
+;;   clipboard.  Contacts are inserted/copied in a format that is
+;;   suitable for address fields, i.e. with quote names and email
+;;   addresses.
 
 ;;; Install:
 
