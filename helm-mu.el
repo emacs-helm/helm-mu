@@ -208,10 +208,10 @@ See `helm-mu-get-search-pattern'"
     :data #'helm-mu-contacts-init
     :filtered-candidate-transformer #'helm-mu-contacts-transformer
     :fuzzy-match nil
-    :action '(("Compose email addressed to this contact" . helm-mu-compose-mail)
-              ("Get the emails from/to given contacts" . helm-mu-action-get-contact-emails)
-              ("Insert email addresses at point." . helm-mu-action-insert-contacts)
-              ("Copy email addresses to clipboard." . helm-mu-action-copy-contacts-to-clipboard))))
+    :action '(("Compose email addressed to selected contacts." . helm-mu-compose-mail)
+              ("Get the emails from/to the selected contacts." . helm-mu-action-get-contact-emails)
+              ("Insert contacts at point." . helm-mu-action-insert-contacts)
+              ("Copy contacts to clipboard." . helm-mu-action-copy-contacts-to-clipboard))))
 
 
 

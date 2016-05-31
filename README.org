@@ -96,9 +96,9 @@ To search for contacts use ~helm-mu-contacts~ (e.g., ~M-x helm-mu-contacts~).  N
 
 ~helm-mu-contacts~ offers four actions that can be performed on selected contacts:
 
-1. Compose email addressed to this contact
-2. Get the emails from/to the selected contacts
-3. Insert email addresses at point.
-4. Copy email addresses to clipboard.
+1. Compose email addressed to selected contacts.
+2. Get the emails from/to the selected contacts.
+3. Insert contacts at point.
+4. Copy contacts to clipboard.
 
-To select multiple contacts use ~M-SPC~ (works in all helm sources).
+Select one or multiple contacts and press ~TAB~ to see the list of available actions.  Use ~M-SPC~ to select multiple contacts (works in all helm sources).
