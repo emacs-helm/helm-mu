@@ -198,7 +198,6 @@ See `helm-mu-get-search-pattern'"
     :candidates-process #'helm-mu-init
     :candidate-transformer
     '(helm-mu-candidate-parser helm-mu-candidates-formatter)
-    :matchplugin nil
     :nohighlight t
     :requires-pattern 3
     :persistent-action #'helm-mu-persistent-action
@@ -208,7 +207,6 @@ See `helm-mu-get-search-pattern'"
   (helm-build-in-buffer-source "Search contacts with mu"
     :data #'helm-mu-contacts-init
     :filtered-candidate-transformer #'helm-mu-contacts-transformer
-    :fuzzy-match nil
     :action '(("Compose email addressed to this contact" . helm-mu-compose-mail)
               ("Get the emails from/to given contacts" . helm-mu-action-get-contact-emails))))
 
