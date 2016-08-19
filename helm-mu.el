@@ -34,15 +34,26 @@
 ;; See the Github page for details and install instructions:
 ;;
 ;;  https://github.com/emacs-helm/helm-mu
+;;
+;; News:
+;;
+;; - 2016-05-31: Added two new actions in helm-mu-contacts: 1. Insert
+;;   selected contacts at point. 2) Copy selected contacts to
+;;   clipboard.  Contacts are inserted/copied in a format that is
+;;   suitable for address fields, i.e. with quote names and email
+;;   addresses.
 
 ;;; Install:
 
 ;; Helm-mu requires a fully configured mu4e setup and the latest
-;; version of mu (version from Sept 27 2013 or later).
+;; version of mu (version from Sept 27 2013 or later).  Also make sure
+;; that helm is configured.  See
+;; https://github.com/emacs-helm/helm#install-from-emacs-packaging-system
+;; for details.
 ;;
-;; Copy helm-mu.el to a directory in your load-path.  And add the
-;; following to your init file:
-;;
+;; Copy helm-mu.el to a directory in your load-path or install helm-mu
+;; from MELPA (preferred).  Then add the following to your init file:
+;;  
 ;;     (require 'helm-mu)
 ;;
 ;; Alternatively, you can use the autoload facility:
@@ -52,7 +63,7 @@
 ;;
 ;; To run mu, helm-mu uses the function `start-process-shell-command'.
 ;; It assumes that the shell called by that function is compatible
-;; with the Bourne shell (e.g. bash).  If your shell is incompatible,
+;; with the Bourne shell (e.g., bash).  If your shell is incompatible,
 ;; the mu command may not work.
 ;;
 ;; GNU sed is used to do some filtering of the results returned by
@@ -99,6 +110,7 @@
 (require 'cl-lib)
 (require 'helm)
 (require 'mu4e)
+(require 'helm-easymenu)
 
 (defgroup helm-mu nil
   "Helm completion for mu."
@@ -162,13 +174,8 @@ See `helm-mu-get-search-pattern'"
   :group 'helm-mu
   :type 'boolean)
 
-(if (not (featurep 'helm-config))
-    (warn "Helm does not seem to be properly configured.  Please see
-    Helm's documentation for details on how to do this:
-    https://github.com/emacs-helm/helm#install-from-emacs-packaging-system")
-  (easy-menu-add-item nil '("Tools" "Helm" "Tools") ["Mu" helm-mu
-    t])
-  (easy-menu-add-item nil '("Tools" "Helm" "Tools") ["Mu contacts" helm-mu-contacts t]))
+(easy-menu-add-item nil '("Tools" "Helm" "Tools") ["Mu" helm-mu t])
+(easy-menu-add-item nil '("Tools" "Helm" "Tools") ["Mu contacts" helm-mu-contacts t])
 
 
 (defface helm-mu-contacts-name-face
@@ -207,8 +214,10 @@ See `helm-mu-get-search-pattern'"
   (helm-build-in-buffer-source "Search contacts with mu"
     :data #'helm-mu-contacts-init
     :filtered-candidate-transformer #'helm-mu-contacts-transformer
-    :action '(("Compose email addressed to this contact" . helm-mu-compose-mail)
-              ("Get the emails from/to given contacts" . helm-mu-action-get-contact-emails))))
+    :action '(("Compose email addressed to selected contacts." . helm-mu-compose-mail)
+              ("Get the emails from/to the selected contacts." . helm-mu-action-get-contact-emails)
+              ("Insert contacts at point." . helm-mu-action-insert-contacts)
+              ("Copy contacts to clipboard." . helm-mu-action-copy-contacts-to-clipboard))))
 
 
 
@@ -301,7 +310,7 @@ by appending a `*' to the pattern input by the user"
                       'help-echo (format "%S" val)))
             (:tags (propertize (mapconcat 'identity val ", ")))
             (:size (mu4e-display-size val))
-            (t (mu4e-error "Unsupported header field (%S)" field))))
+            (t (mu4e~headers-custom-field candidate field))))
         (when str
           (setq line (concat line
               (if (not width) str
@@ -390,7 +399,8 @@ address.  The name column has a predefined width."
 (defun helm-mu-compose-mail (candidate)
   "Compose a new email directed to the selected contacts."
   (mu4e~compose-mail (mapconcat 'helm-mu-format-contact
-                                (helm-marked-candidates) ", ")))
+                                (helm-marked-candidates) ", "))
+  (mu4e-compose-mode))
 
 (defun helm-mu-action-get-contact-emails (_candidate)
   "Get the emails from/to (marked) contact"
@@ -402,15 +412,53 @@ address.  The name column has a predefined width."
          ;; `helm-mu-default-search-string'. The query is grouped so that any
          ;; further filter supplied by user are applied for messages matching
          ;; all contacts not just the last contact
-         (helm-mu-default-search-string (concat "("
-                                                ;; Not using `string-join' here
-                                                ;; since it is not available on
-                                                ;; pre 24.4 emacs
-                                                (mapconcat 'identity
-                                                           (mapcar (lambda (email) (format "contact:%s" email)) emails)
-                                                           " OR ")
-                                                ")")))
+         (helm-mu-default-search-string
+          (concat "("
+                  ;; Not using `string-join' here
+                  ;; since it is not available on
+                  ;; pre 24.4 emacs
+                  (mapconcat 'identity
+                             (mapcar (lambda (email) (format "contact:%s" email)) emails)
+                             " OR ")
+                  ")")))
     (helm-mu)))
+
+(defun helm-mu-chomp (str)
+  "Chomp leading and tailing whitespace from STR."
+  (replace-regexp-in-string (rx (or (: bos (* (any " \t\n")))
+                                    (: (* (any " \t\n")) eos)))
+                            ""
+                            str))
+
+(defun helm-mu-compile-address-list (candidates)
+  "Compile a string containing a list of contacts suitable for
+use in the address field of an email."
+  (let* ((candidates (mapcar (lambda (s) (split-string s "[ \t]")) candidates)))
+    (mapconcat #'identity
+               (cl-loop
+                for cand in candidates
+                for address = (helm-mu-chomp (car cand))
+                for name    = (helm-mu-chomp (mapconcat #'identity (cdr cand) " "))
+                for name    = (if (string-match "," name) (format "\"%s\"" name) name)
+                if (string= name "") collect address
+                else collect (format "%s <%s>" name address))
+               ", ")))
+
+(defun helm-mu-action-insert-contacts (_candidate)
+  "Insert list of contacts at point.  The contacts are formatted
+in a format suitable for use in the address field of an email."
+  (let* ((candidates (helm-marked-candidates))
+         (addresses (helm-mu-compile-address-list candidates)))
+    (with-helm-current-buffer
+      (insert addresses))))
+
+(defun helm-mu-action-copy-contacts-to-clipboard (_candidate)
+  "Copy a list of contacts to the clipboard.  The contacts are
+formatted in a format suitable for use in the address field of an
+email."
+  (let* ((candidates (helm-marked-candidates))
+         (addresses (helm-mu-compile-address-list candidates)))
+    (kill-new addresses)))
 
 (defun helm-mu-persistent-action (candidate)
   (save-selected-window
