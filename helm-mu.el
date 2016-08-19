@@ -205,7 +205,7 @@ See `helm-mu-get-search-pattern'"
     :candidates-process #'helm-mu-init
     :candidate-transformer
     '(helm-mu-candidate-parser helm-mu-candidates-formatter)
-    :matchplugin nil
+    :multimatch nil
     :nohighlight t
     :requires-pattern 3
     :persistent-action #'helm-mu-persistent-action
