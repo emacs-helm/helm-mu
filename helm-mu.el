@@ -174,6 +174,13 @@ See `helm-mu-get-search-pattern'"
   :group 'helm-mu
   :type 'boolean)
 
+(defcustom helm-mu-command-arguments ""
+  "Additional arguments passed to `mu' when retrieving contact or mail
+informations. This could be useful, for example, if you use another folder
+than '~/.mu' to store your data"
+  :group 'helm-mu
+  :type 'string)
+
 (easy-menu-add-item nil '("Tools" "Helm" "Tools") ["Mu" helm-mu t])
 (easy-menu-add-item nil '("Tools" "Helm" "Tools") ["Mu contacts" helm-mu-contacts t])
 
@@ -237,7 +244,7 @@ by appending a `*' to the pattern input by the user"
   "Initialize async mu process for `helm-source-mu'."
   (let ((process-connection-type nil)
         (maxnum (helm-candidate-number-limit helm-source-mu))
-        (mucmd (concat mu4e-mu-binary " find -f $'i\td\tf\tt\ts' --sortfield=d --maxnum=%d --reverse --format=sexp %s 2>/dev/null "))
+        (mucmd (concat mu4e-mu-binary " find " helm-mu-command-arguments " -f $'i\td\tf\tt\ts' --sortfield=d --maxnum=%d --reverse --format=sexp %s 2>/dev/null "))
         (sedcmd (concat helm-mu-gnu-sed-program " -e ':a;N;$!ba;s/\\n\\(\\t\\|\\()\\)\\)/ \\2/g'"))
         (pattern (helm-mu-get-search-pattern)))
     (prog1
@@ -268,7 +275,8 @@ by appending a `*' to the pattern input by the user"
   "Retrieves contacts from mu."
   (let ((cmd (concat
               mu4e-mu-binary
-              " cfind --format=mutt-ab"
+              " cfind --format=mutt-ab "
+              helm-mu-command-arguments
               (if helm-mu-contacts-personal " --personal" "")
               (format
                 " --after=%d"
