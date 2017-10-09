@@ -53,7 +53,7 @@
 ;;
 ;; Copy helm-mu.el to a directory in your load-path or install helm-mu
 ;; from MELPA (preferred).  Then add the following to your init file:
-;;  
+;;
 ;;     (require 'helm-mu)
 ;;
 ;; Alternatively, you can use the autoload facility:
@@ -400,10 +400,7 @@ address.  The name column has a predefined width."
 
 (defun helm-mu-display-email (candidate)
   "Open an email using mu4e."
-  (let ((view-buffer (get-buffer "*mu4e-view*")))
-    (when view-buffer
-      (kill-buffer view-buffer)))
-  (mu4e-view-message-with-msgid (plist-get candidate :message-id)))
+  (mu4e-headers-search (helm-mu-get-search-pattern) nil nil nil (plist-get candidate :message-id) t))
 
 (defun helm-mu-compose-mail (candidate)
   "Compose a new email directed to the selected contacts."
