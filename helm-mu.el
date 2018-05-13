@@ -242,7 +242,8 @@ by appending a `*' to the pattern input by the user"
    (if (and helm-mu-append-implicit-wildcard
             ;; Do not append a wildcard if flag is being searched for, wildcards do
             ;; not work with flag
-            (not  (string-match-p "flag:[[:alnum:]]+$" helm-pattern)))
+            (not  (string-match-p "flag:[[:alnum:]]+$" helm-pattern))
+            (not (string-match-p "[ \t]$" helm-pattern)))
        (concat helm-pattern "*")
      helm-pattern)))
 
