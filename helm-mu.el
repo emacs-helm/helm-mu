@@ -315,7 +315,7 @@ by appending a `*' to the pattern input by the user"
             (width (cdr f-w))
             (val (mu4e-message-field candidate (car f-w))) (str))
         (setq str
-          (case field
+          (cl-case field
             (:subject
               (concat
                 (mu4e~headers-thread-prefix (mu4e-message-field candidate :thread))
@@ -423,7 +423,7 @@ address.  The name column has a predefined width."
 (defun helm-mu-action-get-contact-emails (_candidate)
   "Get the emails from/to (marked) contact"
   ;; Extract email from marked candidates
-  (let* ((emails (mapcar #'first
+  (let* ((emails (mapcar #'cl-first
                          (mapcar #'split-string
                                  (helm-marked-candidates))))
          ;; Compose the search query for helm-mu and let bind it to
