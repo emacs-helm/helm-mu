@@ -126,6 +126,11 @@ used: maildir:/INBOX"
   :group 'helm-mu
   :type  'string)
 
+(defcustom helm-mu-always-use-default-search-string nil
+  "By default, starting a search from mu4e-headers-mode will not use the default search string, and will instead prefill the search with the current query. With this option set to non-nil, use default-search-string even when starting a search from mu4e-headers-mode."
+  :group 'helm-mu
+  :type 'boolean)
+
 (defcustom helm-mu-skip-duplicates mu4e-headers-skip-duplicates
   "With this option set to non-nil, show only one of duplicate
 messages. This is useful when you have multiple copies of the same
@@ -486,7 +491,8 @@ email."
 current query will be used to initialize the search.  Otherwise
 `helm-mu-default-search-string' will be used."
   (interactive)
-  (let* ((query (if (eq major-mode 'mu4e-headers-mode)
+  (let* ((query (if (and (eq major-mode 'mu4e-headers-mode)
+                         (not helm-mu-always-use-default-search-string))
                     (mu4e-last-query)
                   helm-mu-default-search-string))
          ;; Do not append space it there is already trailing space or query is
