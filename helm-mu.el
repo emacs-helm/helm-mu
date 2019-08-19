@@ -110,7 +110,6 @@
 (require 'cl-lib)
 (require 'helm)
 (require 'mu4e)
-(require 'helm-easymenu)
 
 (defgroup helm-mu nil
   "Helm completion for mu."
@@ -186,8 +185,11 @@ than '~/.mu' to store your data"
   :group 'helm-mu
   :type 'string)
 
-(easy-menu-add-item nil '("Tools" "Helm" "Tools") ["Mu" helm-mu t])
-(easy-menu-add-item nil '("Tools" "Helm" "Tools") ["Mu contacts" helm-mu-contacts t])
+;;;###autoload
+(progn
+  (require 'helm-easymenu)
+  (easy-menu-add-item nil '("Tools" "Helm" "Tools") ["Mu" helm-mu t])
+  (easy-menu-add-item nil '("Tools" "Helm" "Tools") ["Mu contacts" helm-mu-contacts t]))
 
 
 (defface helm-mu-contacts-name-face
