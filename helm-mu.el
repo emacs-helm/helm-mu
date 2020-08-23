@@ -126,7 +126,12 @@ used: maildir:/INBOX"
   :type  'string)
 
 (defcustom helm-mu-always-use-default-search-string nil
-  "By default, starting a search from mu4e-headers-mode will not use the default search string, and will instead prefill the search with the current query. With this option set to non-nil, use default-search-string even when starting a search from mu4e-headers-mode."
+  "When non nil always use default-search-string.
+
+By default, starting a search from mu4e-headers-mode will not use
+the default search string, and will instead prefill the search
+with the current query, this option set to non nil ensure to always
+search with default-search-string."
   :group 'helm-mu
   :type 'boolean)
 
