@@ -333,7 +333,7 @@ by appending a `*' to the pattern input by the user"
                       'help-echo (format "%S" val)))
             (:tags (propertize (mapconcat 'identity val ", ")))
             (:size (mu4e-display-size val))
-            (t (mu4e~headers-custom-field candidate field))))
+            (t (mu4e~headers-custom-field-value candidate field))))
         (when str
           (setq line (concat line
               (if (not width) str
