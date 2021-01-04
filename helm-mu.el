@@ -381,28 +381,30 @@ by appending a `*' to the pattern input by the user"
 (defun helm-mu-contacts-transformer (candidates source)
   "Formats the contacts to display in two columns, name and
 address.  The name column has a predefined width."
-  (cl-loop for i in (helm-remove-if-match
-                     "\\`\\(reply.*reply\\.github\\.com\\)\\|\\(noreply\\)"
-                     candidates)
-        for contact = (split-string i "\t")
-        for name = (replace-regexp-in-string
-                     (car helm-mu-contacts-name-replace)
-                     (cadr helm-mu-contacts-name-replace)
-                     (cadr contact))
-        for address = (car contact)
-        for width = (save-excursion (with-helm-window (helm-mu-window-width)))
-        collect
-        (cons (concat
-                (propertize
-                  (truncate-string-to-width
-                    name helm-mu-contacts-name-colwidth 0 ?\s)
-                  'face 'helm-mu-contacts-name-face)
-                " "
-                (propertize
-                  (truncate-string-to-width
-                    address (- width helm-mu-contacts-name-colwidth 1) 0 ?\s)
-                  'face 'helm-mu-contacts-address-face))
-              i)))
+  (let* ((candidates (helm-remove-if-not-match "@" candidates))
+         (candidates (helm-remove-if-match
+                      "\\`\\(reply.*reply\\.github\\.com\\)\\|\\(noreply\\)"
+                      candidates)))
+    (cl-loop for i in candidates
+             for contact = (split-string i "\t")
+             for name = (replace-regexp-in-string
+                         (car helm-mu-contacts-name-replace)
+                         (cadr helm-mu-contacts-name-replace)
+                         (cadr contact))
+             for address = (car contact)
+             for width = (save-excursion (with-helm-window (helm-mu-window-width)))
+             collect
+             (cons (concat
+                    (propertize
+                     (truncate-string-to-width
+                      name helm-mu-contacts-name-colwidth 0 ?\s)
+                     'face 'helm-mu-contacts-name-face)
+                    " "
+                    (propertize
+                     (truncate-string-to-width
+                      address (- width helm-mu-contacts-name-colwidth 1) 0 ?\s)
+                     'face 'helm-mu-contacts-address-face))
+                   i))))
 
 (defun helm-mu-format-contact (candidate)
   "Convert a CANDIDATE into a format suitable for mailing."
