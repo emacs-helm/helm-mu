@@ -234,10 +234,10 @@ than '~/.mu' to store your data"
   (helm-build-in-buffer-source "Search contacts with mu"
     :data #'helm-mu-contacts-init
     :filtered-candidate-transformer #'helm-mu-contacts-transformer
-    :action '(("Compose email addressed to selected contacts." . helm-mu-compose-mail)
-              ("Get the emails from/to the selected contacts." . helm-mu-action-get-contact-emails)
-              ("Insert contacts at point." . helm-mu-action-insert-contacts)
-              ("Copy contacts to clipboard." . helm-mu-action-copy-contacts-to-clipboard))))
+    :action '(("Compose email to contact(s)"      . helm-mu-compose-mail)
+              ("Search emails from/to contact(s)" . helm-mu-action-get-contact-emails)
+              ("Insert contact(s) at point"       . helm-mu-action-insert-contacts)
+              ("Copy contact(s) to clipboard"     . helm-mu-action-copy-contacts-to-clipboard))))
 
 
 
