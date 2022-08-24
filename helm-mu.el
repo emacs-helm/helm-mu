@@ -226,6 +226,7 @@ than '~/.mu' to store your data"
     '(helm-mu-candidate-parser helm-mu-candidates-formatter)
     :multimatch nil
     :nohighlight t
+    :keymap 'helm-mu-map
     :requires-pattern 3
     :persistent-action #'helm-mu-persistent-action
     :action '(("Display message in mu4e" . helm-mu-display-email))))
@@ -546,7 +547,6 @@ current query will be used to initialize the search.  Otherwise
     (helm :sources 'helm-source-mu
           :buffer "*helm mu*"
           :full-frame t
-          :keymap helm-mu-map
           :input input
           :candidate-number-limit 500)))
 
