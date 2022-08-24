@@ -249,19 +249,23 @@ than '~/.mu' to store your data"
   "Get the pattern that should be sent to mu.
 If `helm-mu-append-implicit-wildcard' is non-nil, this creates a search pattern
 by appending a `*' to the pattern input by the user"
-  ;; mu4e will error if the pattern contains newlines: replace them with spaces
-  ;; and delete the last one.  to make sure '*' applies on the last word.
-  (let ((helm-pattern
-         (replace-regexp-in-string
-          "\n" " "
-          (replace-regexp-in-string "\n$" "" helm-pattern))))
-   (if (and helm-mu-append-implicit-wildcard
-            ;; Do not append a wildcard if flag is being searched for, wildcards do
-            ;; not work with flag
-            (not  (string-match-p "flag:[[:alnum:]]+$" helm-pattern))
-            (not (string-match-p "[ \t]$" helm-pattern)))
-       (concat helm-pattern "*")
-     helm-pattern)))
+  ;; mu4e will error if the pattern contains newlines: replace them
+  ;; with spaces and delete the last one.  to make sure '*' applies on
+  ;; the last word.
+  (let* ((current-or-last-pattern
+         (if (not (string= helm-pattern ""))
+             helm-pattern helm-last-query))
+         (pattern
+          (helm-aand current-or-last-pattern
+                     (replace-regexp-in-string "\n" " " it)
+                     (replace-regexp-in-string "\n$" "" it))))
+    (if (and helm-mu-append-implicit-wildcard
+             ;; Do not append a wildcard if flag is being searched
+             ;; for, wildcards do not work with flag
+             (not  (string-match-p "flag:[[:alnum:]]+$" pattern))
+             (not (string-match-p "[ \t]$" pattern)))
+        (concat pattern "*")
+      pattern)))
 
 (defun helm-mu-init ()
   "Initialize async mu process for `helm-source-mu'."
