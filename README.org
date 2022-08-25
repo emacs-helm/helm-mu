@@ -3,7 +3,7 @@
 
 [[http://melpa.org/#/helm-mu][http://melpa.org/packages/helm-mu-badge.svg]]
     
-[[https://github.com/djcb/mu][Mu]] is an indexer for maildirs and mu4e is a mutt-like MUA for Emacs build on top of mu.  Mu is highly efficient, which makes it possible to get instant search results even for huge maildirs.  It also provides search operators similar to Google mail, e.g:
+Helm-mu is a helm frontend for [[https://github.com/djcb/mu][Mu]], an indexer for maildirs, and for mu4e, a mutt-like MUA for Emacs built on top of mu.  Mu is highly efficient, which makes it possible to get instant search results even for huge maildirs.  It also provides search operators similar to Google Mail’s, e.g:
 
 #+BEGIN_EXAMPLE
     from:Titus to:Anne flag:attach vacation photos
@@ -15,23 +15,23 @@
 
 * Install
 
-Helm-mu requires a fully configured mu4e setup.  Also make sure that Helm is properly installed and configured. This involves putting the following line in your startup file (see [[https://github.com/emacs-helm/helm#install-from-emacs-packaging-system][Helm’s documentation]] for details):
+Helm-mu requires a fully configured mu4e setup.  Helm also needs to be properly installed and configured.  This involves putting the following line in your startup file (see [[https://github.com/emacs-helm/helm#install-from-emacs-packaging-system][Helm’s documentation]] for details):
 
 #+BEGIN_SRC emacs-lisp
-    (require 'helm-config)
+(require 'helm-config)
 #+END_SRC
 
 The preferred way to install helm-mu is through MELPA but you can also place the file ~helm-mu.el~ in a directory included in your ~load-path~.  In the latter case, add the following to your init file:
 
 #+BEGIN_SRC emacs-lisp
-    (require 'helm-mu)
+(require 'helm-mu)
 #+END_SRC
 
 Alternatively, you can use the autoload facility:
 
 #+BEGIN_SRC emacs-lisp
-    (autoload 'helm-mu "helm-mu" "" t)
-    (autoload 'helm-mu-contacts "helm-mu" "" t)
+(autoload 'helm-mu "helm-mu" "" t)
+(autoload 'helm-mu-contacts "helm-mu" "" t)
 #+END_SRC
 
 To run mu, helm-mu uses the function ~start-process-shell-command~.  It assumes that the shell called by that function is compatible with the Bourne shell (e.g., bash).
@@ -49,16 +49,21 @@ brew install gnu-sed --with-default-names
 Customization variables are listed below.  See the documentation within Emacs for details.
 
 - ~helm-mu-default-search-string~
+- ~helm-mu-always-use-default-search-string~
+- ~helm-mu-skip-duplicates~
 - ~helm-mu-contacts-name-colwidth~
 - ~helm-mu-contacts-name-replace~
 - ~helm-mu-contacts-after~
 - ~helm-mu-contacts-personal~
+- ~helm-mu-gnu-sed-program~
+- ~helm-mu-append-implicit-wildcard~
+- ~helm-mu-command-arguments~
 
 * Configuration
 
 ** Default search string
 
-The default search string is the empty string.  This means that if you fire up helm-mu, initially you see all emails from all mailboxes.  To configure a different default search, use the variable ~helm-mu-default-search-string~.  For example, to see only emails from your inbox and sent folder the following may work (depending on the names of these mailboxes on your system):
+The default search string is the empty string.  This means that if you fire up helm-mu, you will initially see all emails from all mailboxes.  To configure a different default search, use the variable ~helm-mu-default-search-string~.  For example, to see only emails from your inbox and sent folder the following may work (depending on the names of these mailboxes on your system):
 
 #+BEGIN_SRC elisp
 (setq helm-mu-default-search-string "(maildir:/INBOX OR maildir:/Sent)")
@@ -82,7 +87,7 @@ Some people only send you emails through mailing lists.  You can exclude these c
 
 ** Use helm-mu instead of Mu4e’s search
 
-When you press s in Mu4e, this starts a new search.  If you want to replace Mu4e’s search function by helm-mu, add the following to your configuration file:
+When you press ~s~ in Mu4e, this starts a new search.  If you want to replace Mu4e’s search function by helm-mu, add the following to your configuration file:
 
 #+BEGIN_SRC elisp
 (define-key mu4e-main-mode-map "s" 'helm-mu)
@@ -92,7 +97,7 @@ When you press s in Mu4e, this starts a new search.  If you want to replace Mu4e
 
 * Usage
 
-To search for emails use the command ~helm-mu~ (e.g., ~M-x helm-mu~).  When you would like to read an email without finishing the helm session, you can select the email and press ~C-z~.  This will split the screen horizontally and show the email in the new window while keeping the search results in the other.  Alternatively, you can open the email using the enter key and return to the helm session using the command ~helm-resume~. By default a ~*~ is appended to the search query entered by the user before passing it to ~mu~, this allows getting results for partially entered queries. This behavior can be disabled by customizing the variable ~helm-mu-append-implicit-wildcard~.
+To search for emails use the command ~helm-mu~ (e.g., ~M-x helm-mu~).  When you would like to read an email without finishing the helm session, you can select the email and press ~C-z~.  This will split the screen horizontally and show the e-mail in the new window while keeping the search results in the other.  Alternatively, you can open the email using the enter key and return to the helm session using the command ~helm-resume~.  By default a ~*~ is appended to the search query entered by the user before passing it to ~mu~, this allows getting results for partially entered queries.  This behavior can be disabled by customizing the variable ~helm-mu-append-implicit-wildcard~.  To show the current search results in a regular mu4e header-view press ~S-<return>~.  When you call helm-mu in a header-view or from an e-mail, the default search will show the same content as the current header-view.
 
 To search for contacts use ~helm-mu-contacts~ (e.g., ~M-x helm-mu-contacts~).  Note that search terms are interpreted differently by ~helm-mu-contacts~ than by ~helm-mu~.  The latter assumes that the search terms are complete words, i.e., that they are surrounded by white spaces or punctuation.  So if you search for ~jo~ it will only return emails in which ~jo~ occurs as a word.  In contrast to that, ~helm-mu-contacts~ will return all contacts in which ~jo~ occurs as a substring.
 

@@ -440,7 +440,8 @@ address.  The name column has a predefined width."
   (helm-run-after-quit 'mu4e-headers-search (helm-mu-get-search-pattern)))
 
 (defun helm-mu-display-email (candidate)
-  "Open an email using mu4e."
+  "Open an email using mu4e and display result for the current
+search in mu4e-headers view."
   (mu4e-headers-search (helm-mu-get-search-pattern)
                        nil nil nil (plist-get candidate :message-id) t))
 
