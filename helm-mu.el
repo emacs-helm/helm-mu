@@ -301,7 +301,7 @@ by appending a `*' to the pattern input by the user"
                                              0))
                                 'face 'helm-grep-finish))))
                 (force-mode-line-update))
-            (helm-log "Error: Mu %s"
+            (helm-log "helm-mu-init" "Error: Mu %s"
                       (replace-regexp-in-string "\n" "" event))))))))
 
 (defun helm-mu-contacts-init ()
