@@ -11,6 +11,7 @@ Helm-mu is a helm frontend for [[https://github.com/djcb/mu][Mu]], an indexer fo
 
 * News
 
+- [2022-12-17 Sat] :: To override mu4e's default search function, you now have to use: ~(define-key mu4e-search-minor-mode-map "s" 'helm-mu)~
 - [2016-05-31 Tue] :: Added two new actions in helm-mu-contacts: 1. Insert selected contacts at point. 2) Copy selected contacts to clipboard.  Contacts are inserted/copied in a format that is suitable for address fields, i.e. with quote names and email addresses.
 
 * Install
@@ -90,9 +91,7 @@ Some people only send you emails through mailing lists.  You can exclude these c
 When you press ~s~ in Mu4e, this starts a new search.  If you want to replace Mu4e’s search function by helm-mu, add the following to your configuration file:
 
 #+BEGIN_SRC elisp
-(define-key mu4e-main-mode-map "s" 'helm-mu)
-(define-key mu4e-headers-mode-map "s" 'helm-mu)
-(define-key mu4e-view-mode-map "s" 'helm-mu)
+(define-key mu4e-search-minor-mode-map "s" 'helm-mu)
 #+END_SRC
 
 * Usage
