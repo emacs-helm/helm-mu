@@ -275,7 +275,7 @@ by appending a `*' to the pattern input by the user"
         (mucmd (concat mu4e-mu-binary
                        " find "
                        helm-mu-command-arguments
-                       " -f $'i\td\tf\tt\ts' --sortfield=d --maxnum=%d --reverse --format=sexp %s 2>/dev/null "))
+                       " -f $'i\td\tf\tt\ts' --sortfield=date --maxnum=%d --reverse --format=sexp %s 2>/dev/null "))
         (sedcmd (concat helm-mu-gnu-sed-program
                         " -e ':a;N;$!ba;s/\\n\\(\\t\\|\\()\\)\\)/ \\2/g'"))
         (pattern (helm-mu-get-search-pattern)))
