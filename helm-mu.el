@@ -156,7 +156,7 @@ default value removes quotation marks."
   :group 'helm-mu
   :type  '(list string string))
 
-(defcustom helm-mu-contacts-after "01-Jan-1970 00:00:00"
+(defcustom helm-mu-contacts-after "01-Jan-1970 00:00:01"
   "Only show contacts from mails received after that time.
 Should be of the form the function `date-to-time' can parse."
   :group 'helm-mu
