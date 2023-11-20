@@ -19,7 +19,7 @@ Helm-mu is a helm frontend for [[https://github.com/djcb/mu][Mu]], an indexer fo
 Helm-mu requires a fully configured mu4e setup.  Helm also needs to be properly installed and configured.  This involves putting the following line in your startup file (see [[https://github.com/emacs-helm/helm#install-from-emacs-packaging-system][Helm’s documentation]] for details):
 
 #+BEGIN_SRC emacs-lisp
-(require 'helm-config)
+(require 'helm)
 #+END_SRC
 
 The preferred way to install helm-mu is through MELPA but you can also place the file ~helm-mu.el~ in a directory included in your ~load-path~.  In the latter case, add the following to your init file:
