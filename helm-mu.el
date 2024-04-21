@@ -164,7 +164,7 @@ Should be of the form the function `date-to-time' can parse."
 
 (defcustom helm-mu-contacts-personal nil
   "If non-nil, only show addresses seen in messages where one of
-'my' e-mail addresses was seen in one of the address fields; this
+\\='my' e-mail addresses was seen in one of the address fields; this
 is to exclude addresses only seen in mailing-list messages. See
 the --my-address parameter in mu index."
   :group 'helm-mu
