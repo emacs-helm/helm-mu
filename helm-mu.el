@@ -162,6 +162,11 @@ Should be of the form the function `date-to-time' can parse."
   :group 'helm-mu
   :type  'string)
 
+(defcustom helm-mu-contacts-ignore-candidates-regexp
+  "\\`\\(reply.*reply\\.github\\.com\\)\\|\\(no[.-]?reply\\)"
+  "Ignore contacts matching this regexp."
+  :type 'string)
+
 (defcustom helm-mu-contacts-personal nil
   "If non-nil, only show addresses seen in messages where one of
 \\='my' e-mail addresses was seen in one of the address fields; this
@@ -401,7 +406,7 @@ by appending a `*' to the pattern input by the user"
 address.  The name column has a predefined width."
   (let* ((candidates (helm-remove-if-not-match "@" candidates))
          (candidates (helm-remove-if-match
-                      "\\`\\(reply.*reply\\.github\\.com\\)\\|\\(noreply\\)"
+                      helm-mu-contacts-ignore-candidates-regexp
                       candidates)))
     (cl-loop for i in candidates
              for contact = (split-string i "\t")
