@@ -1,4 +1,4 @@
-#+TITLE: Helm-mu – A Helm front-end for the maildir indexer mu and the mail user agent mu4e
+#+TITLE: Helm-mu – Helm search for e-mails and contact in mu4e
 #+Options: num:nil
 
 [[http://melpa.org/#/helm-mu][http://melpa.org/packages/helm-mu-badge.svg]]
@@ -6,7 +6,7 @@
 Helm-mu is a helm frontend for [[https://github.com/djcb/mu][Mu]], an indexer for maildirs, and for mu4e, a mutt-like MUA for Emacs built on top of mu.  Mu is highly efficient, which makes it possible to get instant search results even for huge maildirs.  It also provides search operators similar to Google Mail’s, e.g:
 
 #+BEGIN_EXAMPLE
-    from:Titus to:Anne flag:attach vacation photos
+    from:Adam to:Eve flag:attach vacation photos
 #+END_EXAMPLE
 
 * News

@@ -454,8 +454,8 @@ search in mu4e-headers view."
 
 (defun helm-mu-compose-mail (_candidate)
   "Compose a new email directed to the selected contacts."
-  (mu4e-compose-mail (mapconcat 'helm-mu-format-contact
-                                (helm-marked-candidates) ", ")))
+  (compose-mail (mapconcat 'helm-mu-format-contact
+                           (helm-marked-candidates) ", ")))
 
 (defun helm-mu-action-get-contact-emails (_candidate)
   "Get the emails from/to (marked) contact"
