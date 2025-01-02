@@ -190,12 +190,28 @@ partially entered queries.  See `helm-mu-get-search-pattern'"
   :group 'helm-mu
   :type 'boolean)
 
+(defcustom helm-mu-use-mu4e-query-fragments nil
+  "Should queries be preprocessed with `mu4e-query-fragments-expand'.
+If non-nil `mu4e-query-fragments-expand' from the
+`mu4e-query-fragments' is called on the query before sending it to mu."
+  :group 'helm-mu
+  :type 'boolean)
+
+(defcustom helm-mu-prexfix ""
+  "Prefix that is always prepended to a query.
+You must manually include a space at the end in most cases."
+  :group 'helm-mu
+  :type 'string)
+
 (defcustom helm-mu-command-arguments ""
   "Additional arguments passed to `mu' when retrieving contact or mail
 informations. This could be useful, for example, if you use another folder
 than '~/.mu' to store your data"
   :group 'helm-mu
   :type 'string)
+
+(when helm-mu-use-mu4e-query-fragments
+  (require 'mu4e-query-fragments))
 
 ;;;###autoload
 (progn
@@ -264,9 +280,12 @@ by appending a `*' to the pattern input by the user"
          (if (not (string= helm-pattern ""))
              helm-pattern helm-last-query))
          (pattern
-          (helm-aand current-or-last-pattern
-                     (replace-regexp-in-string "\n" " " it)
-                     (replace-regexp-in-string "\n$" "" it))))
+          (concat helm-mu-prexfix
+                  (helm-aand current-or-last-pattern
+                             (replace-regexp-in-string "\n" " " it)
+                             (replace-regexp-in-string "\n$" "" it)))))
+    (when helm-mu-use-mu4e-query-fragments
+      (setq pattern (mu4e-query-fragments-expand pattern)))
     (if (and helm-mu-append-implicit-wildcard
              ;; Do not append a wildcard if flag is being searched
              ;; for, wildcards do not work with flag
