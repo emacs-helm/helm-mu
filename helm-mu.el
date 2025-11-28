@@ -478,7 +478,7 @@ search in mu4e-headers view."
                                      emails)
                              " OR ")
                   ")")))
-    (helm-mu)))
+    (with-current-buffer "*Messages*" (helm-mu))))
 
 (defun helm-mu-chomp (str)
   "Chomp leading and tailing whitespace from STR."
